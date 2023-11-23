@@ -155,7 +155,10 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Text(
             copyRight,
             style: TextStyle(
-                color: Color.fromARGB(225, 121, 121, 121), fontSize: 15),
+                color:
+                Color.fromARGB(225, 121, 121, 121),
+                fontSize: 15
+            ),
           ),
         ),
       ],
