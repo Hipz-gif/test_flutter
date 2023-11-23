@@ -1,164 +1,96 @@
 import 'package:flutter/material.dart';
-import '../constants/color.dart';
-import '../constants/string_text.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  // ignore: library_private_types_in_public_api
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  List<int> numbers = [1, 2, 3, 4, 5];
+  String minSum = '';
+  String maxSum = '';
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        toolbarHeight: 80,
-        leadingWidth: 100,
-        leading: SizedBox(
-          width: double.infinity,
-          height: double.infinity,
-          child: Image.asset(
-            pathImageLogo,
-            width: double.infinity,
-            height: double.infinity,
-          )
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(
+          title: const Text('Mini-Max Sum'),
         ),
-        actions: [
-          Row(
-            mainAxisSize: MainAxisSize.min,
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    author,
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: greyAuthor
-                    ),
-                  ),
-                  Text(
-                    authorName,
-                    style: TextStyle(fontSize: 13, color: black),
-                  ),
-                ],
+              ElevatedButton(
+                onPressed: () {
+                  _calculateMinMaxSum(numbers);
+                },
+                child: const Text('Calculate Mini-Max Sum'),
               ),
-              const SizedBox(width: 8),
-              const Padding(
-                padding: EdgeInsets.all(8.0),
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: Colors.white,
-                  backgroundImage: AssetImage(pathImageAvatar),
-                ),
-              ),
+              const SizedBox(height: 20),
+              Text('Minimum Sum: $minSum'),
+              Text('Maximum Sum: $maxSum'),
             ],
           ),
-        ],
+        ),
       ),
-      body: _buildBodyApp(),
     );
   }
 
-  Widget _buildBodyApp() {
-    return Column(
-      children: [
-        Container(
-          height: 150,
-          width: MediaQuery.of(context).size.width,
-          color: aliceGreen,
-          child: const Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                storyName,
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              SizedBox(height: 35),
-              Text(
-                storyTitle,
-                style: TextStyle(fontSize: 14, color: Colors.white),
-              ),
-            ],
-          ),
+  void _calculateMinMaxSum(List<int> numbers) {
+    if (numbers.length == 5) {
+      _quicksort(numbers, 0, numbers.length - 1);
+
+      int minSumValue = numbers[0] + numbers[1] + numbers[2] + numbers[3];
+      int maxSumValue = numbers[1] + numbers[2] + numbers[3] + numbers[4];
+
+      setState(() {
+        minSum = minSumValue.toString();
+        maxSum = maxSumValue.toString();
+      });
+    } else {
+      const Text(
+          'Please provide exactly five numbers.',
+        style: TextStyle(
+          color: Colors.black,
+          fontSize: 20
         ),
-        const SizedBox(height: 45),
-        Container(
-          height: 250,
-          padding: const EdgeInsets.symmetric(horizontal: 30),
-          child:  Text(
-            storyContent,
-            style: TextStyle(height: 1.5, fontSize: 14, color: greyContent),
-            textAlign: TextAlign.start,
-          ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: aliceBlue,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius
-                      .zero,
-                ),
-              ),
-              child: const Text(voteIsFunny),
-            ),
-            ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: aliceGreen,
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius
-                      .zero,
-                ),
-              ),
-              child: const Text(voteIsNotFunny),
-            ),
-          ],
-        ),
-        const SizedBox(
-          height: 40,
-        ),
-        const Divider(
-          thickness: 0.7,
-          color: Colors.grey,
-        ),
-        const SizedBox(
-          height: 10,
-        ),
-        Container(
-          height: 70,
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child:  Text(
-            storySource,
-            style: TextStyle(
-                height: 1.2,
-                fontSize: 12,
-                color: greyText),
-            textAlign: TextAlign.center,
-          ),
-        ),
-        const SizedBox(
-          height: 5,
-        ),
-        const SizedBox(
-          height: 30,
-          child: Text(
-            copyRight,
-            style: TextStyle(
-                color: Color.fromARGB(225, 121, 121, 121), fontSize: 15),
-          ),
-        ),
-      ],
-    );
+      );
+    }
+  }
+
+  void _quicksort(List<int> arr, int low, int high) {
+    // If the array part has more than one element
+    if (low < high) {
+      // Find the pivot index, the array is sorted based on this pivot
+      int pivotIndex = _partition(arr, low, high);
+      // Call recursively to sort the left and right subsections of the pivot
+      _quicksort(arr, low, pivotIndex - 1);
+      _quicksort(arr, pivotIndex + 1, high);
+    }
+  }
+
+  int _partition(List<int> arr, int low, int high) {
+    // Select pivot, here select the element at the end of the array
+    int pivot = arr[high];
+    int i = low - 1; // Index of the smallest element
+    // Browse through each element from low to high - 1
+    for (int j = low; j < high; j++) {
+      if (arr[j] <= pivot) {
+        i++;
+        _swap(arr, i, j);
+      }
+    }
+    _swap(arr, i + 1, high);
+    return i + 1;
+  }
+
+  void _swap(List<int> arr, int i, int j) {
+    int temp = arr[i];
+    arr[i] = arr[j];
+    arr[j] = temp;
   }
 }
