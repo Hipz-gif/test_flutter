@@ -22,3 +22,5 @@ const String storySource = 'This appis created as part of Hlsolutions program. '
     'statement and accepts no liability for any loss or damage '
     'which may arise from reliance on the infor-mation contained on this site. ';
 const String copyRight = 'Copyright 2021 HLS';
+const String pathImageLogo = 'assets/images/ic_logo.png';
+const String pathImageAvatar = 'assets/images/ic_sunflower.jpg';
